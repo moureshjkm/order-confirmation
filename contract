@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract OrderConfirmation {
+    address public seller;
+    address public buyer;
+    bool public orderConfirmed;
+
+    constructor(address _buyer) {
+        seller = msg.sender;
+        buyer = _buyer;
+    }
+
+    function confirmOrder() external {
+        require(msg.sender == buyer, "Only the buyer can confirm the order");
+        assert(!orderConfirmed); // Ensure order is not confirmed twice
+        orderConfirmed = true;
+    }
+
+    function cancelOrder() public view {
+        require(msg.sender == buyer || msg.sender == seller, "Only the buyer or seller may cancel");
+        revert("Order cancellation is not allowed after confirmation");
+    }
+}
